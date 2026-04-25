@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>🌱 Farm AI Test</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    .box { margin-bottom: 25px; padding: 15px; border: 1px solid #ccc; }
+    button { padding: 10px; margin-top: 10px; cursor: pointer; }
+    .loading { color: orange; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+
+<h1>🌱 Smart Farming AI Tester</h1>
+
+<!-- ================= PLANT ================= -->
+<div class="box">
+  <h2>🌿 Plant Identification</h2>
+
+  <input type="file" id="plantImage">
+  <br>
+  <button onclick="identifyPlant()">Identify Plant</button>
+
+  <p id="plantResult"></p>
+</div>
+
+<!-- ================= DISEASE ================= -->
+<div class="box">
+  <h2>🦠 Disease Detection</h2>
+
+  <input type="file" id="diseaseImage">
+  <br>
+  <button onclick="detectDisease()">Detect Disease</button>
+
+  <p id="diseaseResult"></p>
+</div>
+
+<script>
+
+const BASE_URL = "https://plant-backend-avof.onrender.com";
+
+/* ================= PLANT ================= */
+async function identifyPlant() {
+  const file = document.getElementById("plantImage").files[0];
+  const box = document.getElementById("plantResult");
+
+  if (!file) return alert("Select plant image");
+
+  let formData = new FormData();
+  formData.append("image", file);
+
+  box.innerHTML = "<span class='loading'>⏳ Identifying plant...</span>";
+
+  try {
+    const res = await fetch(BASE_URL + "/identify", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json();
+
+    box.innerHTML =
+      `🌿 Result:<br><b>${data.bestMatch || "No result"}</b><br><br>
+       📊 Score data:<br>
+       <pre>${JSON.stringify(data, null, 2)}</pre>`;
+
+  } catch (err) {
+    box.innerHTML = "<span class='error'>❌ Error: " + err.message + "</span>";
+  }
+}
+
+/* ================= DISEASE ================= */
+async function detectDisease() {
+  const file = document.getElementById("diseaseImage").files[0];
+  const box = document.getElementById("diseaseResult");
+
+  if (!file) return alert("Select disease image");
+
+  let formData = new FormData();
+  formData.append("image", file);
+
+  box.innerHTML = "<span class='loading'>⏳ Checking plant health...</span>";
+
+  try {
+    const res = await fetch(BASE_URL + "/detect-disease", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json();
+
+    if (!data || data.error) {
+      box.innerHTML = "<span class='error'>⚠️ Server error or model issue</span>";
+      return;
+    }
+
+    const result = data.result || "No result";
+    const confidence = data.confidence
+      ? (data.confidence * 100).toFixed(2)
+      : "0";
+
+    box.innerHTML =
+      `🦠 Result: <b>${result}</b><br>
+       📊 Confidence: ${confidence}%`;
+
+  } catch (err) {
+    box.innerHTML = "<span class='error'>❌ Error: " + err.message + "</span>";
+  }
+}
+
+</script>
+
+</body>
+</html>

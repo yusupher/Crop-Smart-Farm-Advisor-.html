@@ -1,115 +1,684 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>🌱 Farm AI Test</title>
-  <style>
-    body { font-family: Arial; padding: 20px; }
-    .box { margin-bottom: 25px; padding: 15px; border: 1px solid #ccc; }
-    button { padding: 10px; margin-top: 10px; cursor: pointer; }
-    .loading { color: orange; }
-    .error { color: red; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroNaija – Category Crop Advisor (All 774 LGAs, Live APIs)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root{--ink:#0d1a0f;--forest:#1b4332;--canopy:#2d6a4f;--leaf:#52b788;--mist:#b7e4c7;--dew:#f0faf4;--amber:#c77e24;--sun:#f4a825;--husk:#fef3c7;--clay:#8b4513;--loam:#a0522d;--sand:#d4b483;--sky:#1e3a5f;--horizon:#3b82c4;--cloud:#dbeafe;--cream:#faf7f2;--white:#ffffff;--ink2:#1a2e1d;--muted:#6b7c6e;--border:#dde8de;--r:18px;--rm:12px;--rs:8px;--sh:0 4px 24px rgba(27,67,50,.08);--sh2:0 12px 48px rgba(27,67,50,.14);}*{box-sizing:border-box;margin:0;padding:0}body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh}.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;background:var(--ink);position:relative;overflow:hidden;padding:3rem 2rem 12rem}.hero-bg{position:absolute;inset:0;background:conic-gradient(from 180deg at 30% 70%,#0d3318 0deg,#1b4332 60deg,#071a0d 120deg,#2d6a4f 200deg,#0d3318 360deg);opacity:.9}.hero-rings{position:absolute;inset:0;overflow:hidden;pointer-events:none}.ring{position:absolute;border-radius:50%;border:1px solid rgba(82,183,136,.07)}.ring-1{width:900px;height:900px;top:-200px;right:-300px}.ring-2{width:600px;height:600px;top:-50px;right:-100px;border-color:rgba(82,183,136,.12)}.ring-3{width:300px;height:300px;top:80px;right:50px;border-color:rgba(82,183,136,.18)}.hero-inner{max-width:1000px;margin:0 auto;position:relative;z-index:2}.hero-eyebrow{display:inline-flex;align-items:center;gap:.5rem;background:rgba(82,183,136,.12);border:1px solid rgba(82,183,136,.25);border-radius:50px;padding:.4rem 1rem;font-size:.72rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#74c69d;margin-bottom:2rem}.pulse-dot{width:6px;height:6px;background:#40c463;border-radius:50%;animation:pd 2s ease-in-out infinite}@keyframes pd{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.6)}}.hero h1{font-family:'Instrument Serif',serif;font-size:clamp(3rem,8vw,6rem);font-weight:400;color:#fff;line-height:.95;letter-spacing:-.03em;margin-bottom:1.5rem}.hero h1 em{font-style:italic;color:var(--sun)}.hero-desc{color:#6b9e7a;font-size:1.05rem;font-weight:300;max-width:480px;line-height:1.75;margin-bottom:2.5rem}.api-pills{display:flex;flex-wrap:wrap;gap:.5rem}.api-pill{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:50px;padding:.3rem .85rem;font-size:.7rem;color:rgba(255,255,255,.5);letter-spacing:.05em}.main{max-width:1000px;margin:-8rem auto 4rem;padding:0 1rem;position:relative;z-index:10}.card{background:var(--white);border-radius:var(--r);box-shadow:var(--sh2);overflow:hidden;border:1px solid var(--border)}.progress-bar{height:3px;background:var(--border);position:relative}.progress-fill{height:100%;background:linear-gradient(90deg,var(--canopy),var(--leaf));transition:width .6s cubic-bezier(.4,0,.2,1)}.step-header{display:flex;gap:0;border-bottom:1px solid var(--border);overflow-x:auto}.sh-item{flex:1;min-width:120px;padding:1rem .75rem;text-align:center;cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;position:relative}.sh-item::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:transparent;transition:.2s}.sh-item.active::after{background:var(--canopy)}.sh-num{display:block;font-size:.6rem;font-weight:500;color:var(--muted);letter-spacing:.1em;margin-bottom:.2rem}.sh-label{font-size:.78rem;font-weight:600;color:var(--muted)}.sh-item.active .sh-label{color:var(--forest)}.sh-item.done .sh-label{color:var(--leaf)}.panel{display:none;padding:2.5rem;animation:panelIn .4s cubic-bezier(.4,0,.2,1)}.panel.active{display:block}@keyframes panelIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}.pt{font-family:'Instrument Serif',serif;font-size:1.6rem;font-style:italic;color:var(--forest);margin-bottom:.3rem}.ps{font-size:.88rem;color:var(--muted);margin-bottom:2rem;line-height:1.6}.live-data-block{background:var(--ink);border-radius:var(--rm);padding:1.5rem;margin-bottom:2rem;display:none;position:relative}.live-data-block.show{display:block}.ldb-glow{position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(82,183,136,.2),transparent 70%)}.ldb-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.75rem;position:relative;z-index:1}.ldb-section-title{font-size:.62rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid rgba(255,255,255,.08);grid-column:1/-1}.ldb-tile{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:var(--rs);padding:.85rem 1rem}.ldb-val{font-family:'Instrument Serif',serif;font-size:1.5rem;color:#fff;font-weight:400}.ldb-key{font-size:.68rem;color:rgba(255,255,255,.45);margin-top:.2rem}.soil-result{grid-column:1/-1;background:rgba(160,82,45,.15);border:1px solid rgba(160,82,45,.25);border-radius:var(--rs);padding:1rem;margin-top:.25rem}.soil-name{font-size:1rem;font-weight:600;color:#e8b896}.soil-props{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem}.soil-prop{font-size:.72rem;background:rgba(255,255,255,.06);padding:.25rem .65rem;border-radius:50px;color:rgba(255,255,255,.6)}.field-row{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem}.field{display:flex;flex-direction:column;gap:.4rem;flex:1;min-width:160px}.flabel{font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}select,input[type=number]{width:100%;padding:.8rem 1rem;border:1.5px solid var(--border);border-radius:var(--rm);font-family:'DM Sans',sans-serif;font-size:.95rem;background:#fff;outline:none}.btn{padding:.85rem 2rem;border:none;border-radius:var(--rm);font-size:.88rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:.5rem}.btn-primary{background:var(--forest);color:#fff}.btn-amber{background:var(--amber);color:#fff}.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--ink2)}.btn-sky{background:var(--sky);color:#fff}.btn-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:2rem}.alert{border-radius:var(--rm);padding:1rem 1.25rem;margin:.5rem 0;font-size:.85rem;display:flex;gap:.75rem}.a-green{background:var(--dew);border-left:4px solid var(--canopy)}.a-amber{background:var(--husk);border-left:4px solid var(--amber)}.a-sky{background:var(--cloud);border-left:4px solid var(--horizon)}.result-section{margin-top:2.5rem}.rs-head{font-family:'Instrument Serif',serif;font-size:1.2rem;font-style:italic;color:var(--forest);margin-bottom:1rem;border-bottom:2px solid var(--dew);display:flex;align-items:center;gap:.6rem}.crop-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.25rem}.crop-card{border-radius:var(--r);border:1px solid var(--border);transition:.3s}.crop-card:hover{box-shadow:0 16px 40px rgba(27,67,50,.15);transform:translateY(-4px)}.cc-top{padding:1.5rem 1.25rem 1.25rem;color:#fff;position:relative}.rank-1 .cc-top{background:linear-gradient(135deg,#5c3700,#c77e24 60%,#e8a040)}.rank-2 .cc-top{background:linear-gradient(135deg,#0a2e18,#1b4332 60%,#2d6a4f)}.rank-3 .cc-top{background:linear-gradient(135deg,#0a1f3d,#1e3a5f 60%,#2d5a8e)}.cc-badge{position:absolute;top:1rem;right:1rem;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:.9rem}.cc-icon{font-size:2rem;display:block;margin-bottom:.5rem}.cc-name{font-family:'Instrument Serif',serif;font-size:1.3rem;font-weight:400}.cc-variety{font-size:.72rem;opacity:.75;margin-top:.2rem}.cc-body{padding:1.25rem}.cc-row{display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.82rem}.ck{color:var(--muted);font-weight:500}.cv{font-weight:600;color:var(--ink2);text-align:right}.plant-window{background:linear-gradient(135deg,var(--dew),#d1fae5);border-radius:var(--rm);padding:1rem;margin:.75rem 0}.pw-label{font-size:.68rem;font-weight:700;text-transform:uppercase;color:var(--canopy)}.pw-months{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.5rem}.month-tag{font-size:.68rem;font-weight:700;padding:.25rem .65rem;border-radius:50px;background:var(--canopy);color:#fff}.month-tag.now{background:var(--amber);animation:glow 2s infinite}@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(199,126,36,.4)}50%{box-shadow:0 0 0 8px rgba(199,126,36,0)}}.ai-box{background:var(--ink);border-radius:var(--r);padding:2rem;position:relative}.ai-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}.ai-orb{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--sun));display:flex;align-items:center;justify-content:center;font-size:1.2rem}.ai-title{font-family:'Instrument Serif',serif;font-size:1.2rem;color:#fff;font-style:italic}.ai-sub{font-size:.72rem;color:rgba(255,255,255,.4)}.ai-sections{display:flex;flex-direction:column;gap:1rem}.ai-sec{background:rgba(255,255,255,.05);border-left:3px solid var(--leaf);border-radius:0 var(--rs) var(--rs) 0;padding:1rem 1.25rem}.ai-sec-title{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--leaf);margin-bottom:.6rem}.ai-sec-body{font-size:.85rem;line-height:1.75;color:#a8d5b8}.ai-sec-body strong{color:#e8f5ee}.cal-wrap{overflow-x:auto}.cal-table{width:100%;border-collapse:separate;border-spacing:4px;min-width:560px}.cal-table th{font-size:.62rem;font-weight:600;color:var(--muted);text-align:center}.cal-table td{height:30px;border-radius:6px;background:var(--border);text-align:center;font-size:.62rem;font-weight:700}.cal-table td.plant{background:var(--canopy);color:#fff}.cal-table td.plant-now{background:var(--amber);color:#fff}.page-loader{display:none;padding:4rem 2rem;text-align:center}.page-loader.on{display:block}.loader-orb{width:56px;height:56px;margin:0 auto 1.5rem;position:relative}.loader-orb::before,.loader-orb::after{content:'';position:absolute;border-radius:50%;border:2px solid}.loader-orb::before{inset:0;border-color:var(--mist) transparent transparent transparent;animation:spinning .9s linear infinite}.loader-orb::after{inset:8px;border-color:var(--leaf) transparent transparent transparent;animation:spinning .6s linear infinite reverse}@keyframes spinning{to{transform:rotate(360deg)}}.loader-steps{display:flex;flex-direction:column;gap:.4rem;max-width:280px;margin:0 auto}.loader-step{font-size:.8rem;color:var(--muted);display:flex;align-items:center;gap:.5rem}.loader-step.active{color:var(--forest);font-weight:600}.loader-step.done{color:var(--leaf)}footer{text-align:center;padding:2rem;font-size:.74rem;color:var(--muted)}@media(max-width:640px){.panel{padding:1.5rem 1.25rem}.btn-row{flex-direction:column}.btn{width:100%;justify-content:center}}
+    </style>
 </head>
 <body>
+<div class="hero"><div class="hero-bg"></div><div class="hero-rings"><div class="ring ring-1"></div><div class="ring ring-2"></div><div class="ring ring-3"></div></div>
+<div class="hero-inner"><div class="hero-eyebrow"><span class="pulse-dot"></span>Reliable APIs · 774 LGAs</div>
+<h1>Nigeria<br><em>Smart Farm</em><br>Advisor</h1>
+<p class="hero-desc">Real‑time weather, live soil, climate from Open‑Meteo – specialized crop recommendations by category.</p>
+<div class="api-pills"><span class="api-pill">🌦 Weatherbit</span><span class="api-pill">🌦 OpenWeatherMap</span><span class="api-pill">🧪 SoilGrids</span><span class="api-pill">🌡 Open‑Meteo</span></div>
+</div></div>
 
-<h1>🌱 Smart Farming AI Tester</h1>
-
-<!-- ================= PLANT ================= -->
-<div class="box">
-  <h2>🌿 Plant Identification</h2>
-
-  <input type="file" id="plantImage">
-  <br>
-  <button onclick="identifyPlant()">Identify Plant</button>
-
-  <p id="plantResult"></p>
+<div class="main"><div class="card"><div class="progress-bar"><div class="progress-fill" id="progress" style="width:25%"></div></div>
+<div class="step-header">
+  <button class="sh-item active" id="sh1" onclick="goStep(1)"><span class="sh-num">Step 1</span><span class="sh-label">Location</span></button>
+  <button class="sh-item" id="sh2" onclick="goStep(2)"><span class="sh-num">Step 2</span><span class="sh-label">Farm Profile</span></button>
+  <button class="sh-item" id="sh3" onclick="goStep(3)"><span class="sh-num">Step 3</span><span class="sh-label">Goals</span></button>
+  <button class="sh-item" id="sh4"><span class="sh-num">Step 4</span><span class="sh-label">Results</span></button>
 </div>
 
-<!-- ================= DISEASE ================= -->
-<div class="box">
-  <h2>🦠 Disease Detection</h2>
-
-  <input type="file" id="diseaseImage">
-  <br>
-  <button onclick="detectDisease()">Detect Disease</button>
-
-  <p id="diseaseResult"></p>
+<!-- STEP 1: LOCATION remains the same -->
+<div class="panel active" id="p1">
+  <div class="pt">Where is your farm?</div>
+  <div class="ps">Select State and LGA – live weather, soil &amp; climate will load automatically.</div>
+  <div class="live-data-block" id="live-block"><div class="ldb-glow"></div>
+    <div class="ldb-grid"><div class="ldb-section-title">🌦 Weather (Dual Source) — <span id="ldb-loc">—</span></div>
+      <div class="ldb-tile"><div class="ldb-val" id="ld-temp">—</div><div class="ldb-key">Temperature °C</div></div>
+      <div class="ldb-tile"><div class="ldb-val" id="ld-hum">—</div><div class="ldb-key">Humidity %</div></div>
+      <div class="ldb-tile"><div class="ldb-val" id="ld-rain">—</div><div class="ldb-key">Rain today mm</div></div>
+      <div class="ldb-tile"><div class="ldb-val" id="ld-wind">—</div><div class="ldb-key">Wind km/h</div></div>
+      <div class="ldb-tile"><div class="ldb-val" id="ld-cloud">—</div><div class="ldb-key">Cloud cover %</div></div>
+      <div class="ldb-tile"><div class="ldb-val" id="ld-uv">—</div><div class="ldb-key">UV Index</div></div>
+    </div>
+    <div class="ldb-grid" style="margin-top:.75rem" id="soil-block">
+      <div class="ldb-section-title" id="soil-section-title">🌍 Soil Data (Real‑time)</div>
+      <div class="soil-result" id="soil-result"><div class="ldb-badge" style="background:rgba(82,183,136,.2)">Select a location to fetch soil</div></div>
+    </div>
+    <div class="ldb-grid" style="margin-top:.75rem">
+      <div class="ldb-section-title">📊 Climate Normals (Open‑Meteo)</div>
+      <div class="ldb-tile"><div class="ldb-val" id="ld-annual-rain">—</div><div class="ldb-key">Annual rainfall mm</div></div>
+      <div class="ldb-tile"><div class="ldb-val" id="ld-avg-temp">—</div><div class="ldb-key">Mean temp °C</div></div>
+      <div class="ldb-tile"><div class="ldb-val" id="ld-dry-months">—</div><div class="ldb-key">Dry months/yr</div></div>
+      <div class="ldb-tile"><div class="ldb-val" id="ld-wet-months">—</div><div class="ldb-key">Wet months/yr</div></div>
+    </div>
+  </div>
+  <div class="field-row">
+    <div class="field"><span class="flabel">State</span><select id="sel-state" onchange="onStateChange()"><option value="">— Select State —</option></select></div>
+    <div class="field"><span class="flabel">Local Government Area</span><select id="sel-lga" onchange="checkS1(); if(this.value) refreshDataForLGA()"><option value="">— Select LGA —</option></select></div>
+  </div>
+  <div id="loc-msg"></div>
+  <div class="btn-row">
+    <button class="btn btn-sky" onclick="doGPS()">📡 Auto-detect via GPS</button>
+    <button class="btn btn-primary" id="btn-s1" onclick="goStep(2)" disabled>Continue →</button>
+  </div>
 </div>
+
+<!-- STEP 2: FARM PROFILE (unchanged) -->
+<div class="panel" id="p2">
+  <div class="pt">About your farm</div>
+  <div class="ps">Farm size, water source and your own soil observation.</div>
+  <span class="flabel">Farm Size (hectares)</span>
+  <div class="range-wrap">
+    <input type="range" id="farm-ha" min="0.25" max="100" step="0.25" value="2" oninput="document.getElementById('ha-val').textContent=this.value+' ha'"/>
+    <div class="range-display" id="ha-val">2 ha</div>
+  </div>
+  <span class="flabel">Water Source</span>
+  <div class="chip-row" id="water-chips">
+    <div class="chip on" onclick="sc(this,'water')">🌧 Rain-fed Only</div>
+    <div class="chip" onclick="sc(this,'water')">🚿 Irrigation Available</div>
+    <div class="chip" onclick="sc(this,'water')">🌊 Riverine / Flood Plain</div>
+    <div class="chip" onclick="sc(this,'water')">💧 Borehole / Well</div>
+  </div>
+  <span class="flabel">Your Soil Observation <span style="font-weight:400;color:var(--muted)">(Optional)</span></span>
+  <div class="chip-row" id="soil-obs-chips">
+    <div class="chip on" onclick="sc(this,'soil-obs')">🤷 Use Live Soil Data</div>
+    <div class="chip" onclick="sc(this,'soil-obs')">🟤 Looks sandy-loam</div>
+    <div class="chip" onclick="sc(this,'soil-obs')">🔴 Reddish / laterite</div>
+    <div class="chip" onclick="sc(this,'soil-obs')">⚫ Heavy / cracks when dry</div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="goStep(1)">← Back</button>
+    <button class="btn btn-primary" onclick="goStep(3)">Continue →</button>
+  </div>
+</div>
+
+<!-- STEP 3: GOALS (unchanged) -->
+<div class="panel" id="p3">
+  <div class="pt">Goals &amp; Concerns</div>
+  <div class="ps">AI will generate advice based on your selections and live data.</div>
+  <span class="flabel">Farming Goal</span>
+  <div class="chip-row" id="goal-chips">
+    <div class="chip on" onclick="sc(this,'goal')">🍲 Food Security</div>
+    <div class="chip" onclick="sc(this,'goal')">💰 Commercial / Market</div>
+    <div class="chip" onclick="sc(this,'goal')">⚖️ Mixed</div>
+  </div>
+  <span class="flabel">Advice Needed</span>
+  <div class="chip-row" id="advice-chips">
+    <div class="chip on" onclick="tm(this)">🗓️ When to plant</div>
+    <div class="chip on" onclick="tm(this)">🌱 What to grow</div>
+    <div class="chip on" onclick="tm(this)">🧪 Fertilizer plan</div>
+    <div class="chip" onclick="tm(this)">⚠️ Climate risk</div>
+    <div class="chip" onclick="tm(this)">📈 Yield estimate</div>
+  </div>
+  <span class="flabel">Main Concern</span>
+  <div class="chip-row" id="concern-chips">
+    <div class="chip on" onclick="sc(this,'concern')">✅ None</div>
+    <div class="chip" onclick="sc(this,'concern')">🏜️ Drought / Dry spell</div>
+    <div class="chip" onclick="sc(this,'concern')">🌊 Flooding</div>
+    <div class="chip" onclick="sc(this,'concern')">📉 Low yields</div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="goStep(2)">← Back</button>
+    <button class="btn btn-amber btn-full" onclick="runAdvisor()">🤖 Generate Personalised Advice</button>
+  </div>
+</div>
+
+<!-- STEP 4: RESULTS (now with categories) -->
+<div class="panel" id="p4">
+  <div class="page-loader" id="page-loader"><div class="loader-orb"></div><div class="loader-steps"><div class="loader-step" id="ls1"><span>📡</span>Fetching live weather...</div><div class="loader-step" id="ls2"><span>🧪</span>Loading soil</div><div class="loader-step" id="ls3"><span>🌡</span>Climate from Open‑Meteo</div><div class="loader-step" id="ls4"><span>🌱</span>Ranking crops by category</div><div class="loader-step" id="ls5"><span>🤖</span>AI advice</div></div></div>
+  <div id="results-wrap" style="display:none">
+    <div id="data-summary"></div>
+
+    <!-- Staple Crops -->
+    <div class="result-section">
+      <div class="rs-head">🌾 Best Staple Crops (Top 3)</div>
+      <div id="staples-grid" class="crop-grid"></div>
+      <div id="staples-empty" class="empty-category" style="display:none;text-align:center;color:var(--muted);">Not available for this location</div>
+    </div>
+
+    <!-- Cash Crops -->
+    <div class="result-section">
+      <div class="rs-head">💰 Best Cash Crops (Top 3)</div>
+      <div id="cash-crops-grid" class="crop-grid"></div>
+      <div id="cash-crops-empty" class="empty-category" style="display:none;text-align:center;color:var(--muted);">Not available for this location</div>
+    </div>
+
+    <!-- Vegetables -->
+    <div class="result-section">
+      <div class="rs-head">🥬 Best Vegetables (Top 3)</div>
+      <div id="vegetables-grid" class="crop-grid"></div>
+      <div id="vegetables-empty" class="empty-category" style="display:none;text-align:center;color:var(--muted);">Not available for this location</div>
+    </div>
+
+    <!-- Fruits -->
+    <div class="result-section">
+      <div class="rs-head">🍉 Best Fruits (Top 3)</div>
+      <div id="fruits-grid" class="crop-grid"></div>
+      <div id="fruits-empty" class="empty-category" style="display:none;text-align:center;color:var(--muted);">Not available for this location</div>
+    </div>
+
+    <!-- Tree Crops -->
+    <div class="result-section">
+      <div class="rs-head">🌳 Best Tree Crops (Top 3)</div>
+      <div id="tree-grid" class="crop-grid"></div>
+      <div id="tree-empty" class="empty-category" style="display:none;text-align:center;color:var(--muted);">Not available for this location</div>
+    </div>
+
+    <div class="result-section">
+      <div class="rs-head">🤖 AI Agronomist Advice</div>
+      <div class="ai-box"><div class="ai-header"><div class="ai-orb">🌾</div><div><div class="ai-title">Personalised Farming Intelligence</div></div></div><div id="ai-out"></div></div>
+    </div>
+
+    <div class="result-section">
+      <div class="rs-head">📅 Realistic Planting Calendar</div>
+      <div id="cal-wrap"></div>
+    </div>
+
+    <div class="btn-row"><button class="btn btn-ghost" onclick="goStep(3)">← Adjust</button><button class="btn btn-primary" onclick="resetToNewLocation()">🔄 New Location</button></div>
+  </div>
+</div>
+</div></div>
+<footer>Weather: Weatherbit + OpenWeatherMap · Soil: SoilGrids (with fallback) · Climate: Open‑Meteo · All 774 LGAs</footer>
 
 <script>
+// ═══════════════════════════════════════════════════
+// API KEYS & CONFIG
+// ═══════════════════════════════════════════════════
+const WEATHERBIT_KEY = 'd01bbbf00b4e4c4c8a87cea1f3db1e36';
+const OWM_API_KEY = 'd01bbbf00b4e4c4c8a87cea1f3db1e36';
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-const BASE_URL = "https://plant-backend-avof.onrender.com";
+// ═══════════════════════════════════════════════════
+// ALL 774 LOCAL GOVERNMENT AREAS (compressed)
+// ═══════════════════════════════════════════════════
+const LGA_DATA = [
+  ['Abia', [['Aba North',5.127,7.367],['Aba South',5.102,7.363],['Arochukwu',5.388,7.914],['Bende',5.556,7.637],['Isiala Ngwa North',5.237,7.498],['Isiala Ngwa South',5.177,7.387],['Isuikwuato',5.533,7.484],['Obi Ngwa',5.093,7.534],['Ohafia',5.616,7.832],['Osisioma Ngwa',5.009,7.312],['Ugwunagbo',4.996,7.322],['Ukwa East',4.885,7.404],['Ukwa West',4.973,7.235],['Umuahia North',5.537,7.489],['Umuahia South',5.445,7.497]]],
+  ['Adamawa', [['Demsa',9.459,12.15],['Fufore',9.22,12.64],['Ganye',8.435,12.069],['Girei',9.365,12.546],['Gombi',10.163,12.736],['Guyuk',9.906,11.928],['Hong',10.233,12.929],['Jada',8.758,12.155],['Lamurde',9.61,11.79],['Madagali',10.884,13.628],['Maiha',9.994,13.223],['Mayo-Belwa',9.054,12.059],['Michika',10.622,13.387],['Mubi North',10.27,13.27],['Mubi South',10.185,13.278],['Numan',9.46,12.03],['Shelleng',9.896,12.007],['Song',9.832,12.63],['Toungo',8.125,12.055],['Yola North',9.202,12.483],['Yola South',9.151,12.449]]],
+  ['Akwa Ibom', [['Abak',5.016,7.78],['Eastern Obolo',4.572,7.76],['Eket',4.642,7.927],['Esit Eket',4.715,7.945],['Essien Udim',5.123,7.781],['Etim Ekpo',5.23,7.803],['Etinan',4.845,7.86],['Ibeno',4.582,7.988],['Ibesikpo Asutan',4.936,7.885],['Ibiono Ibom',5.296,7.87],['Ika',5.446,7.578],['Ikono',5.196,7.821],['Ikot Abasi',4.581,7.659],['Ikot Ekpene',5.178,7.711],['Ini',5.293,7.68],['Itu',5.2,7.988],['Mbo',4.659,8.265],['Mkpat Enin',4.735,7.748],['Nsit Atai',4.853,7.932],['Nsit Ibom',4.842,7.941],['Nsit Ubium',4.774,7.818],['Obot Akara',5.281,7.681],['Okobo',4.858,8.179],['Onna',4.698,7.876],['Oron',4.82,8.236],['Oruk Anam',5.071,7.774],['Udung Uko',4.745,8.243],['Ukanafun',5.116,7.682],['Uruan',5.033,8.051],['Urue Offong/Oruko',4.64,8.168],['Uyo',5.038,7.923]]],
+  ['Anambra', [['Aguata',6.016,7.091],['Anambra East',6.357,6.878],['Anambra West',6.26,6.716],['Anaocha',6.211,7.068],['Awka North',6.312,7.107],['Awka South',6.2,7.068],['Ayamelum',6.503,6.993],['Dunukofia',6.224,6.971],['Ekwusigo',5.956,6.843],['Idemili North',6.117,6.924],['Idemili South',6.086,6.897],['Ihiala',5.853,6.855],['Njikoka',6.217,6.975],['Nnewi North',5.991,6.917],['Nnewi South',5.906,6.898],['Ogbaru',6.091,6.763],['Onitsha North',6.152,6.789],['Onitsha South',6.133,6.783],['Orumba North',6.023,7.209],['Orumba South',5.913,7.215],['Oyi',6.276,6.938]]],
+  ['Bauchi', [['Alkaleri',9.893,10.501],['Bauchi',10.31,9.844],['Bogoro',9.586,9.607],['Dambam',11.684,10.758],['Darazo',11.322,10.415],['Dass',10.01,9.518],['Gamawa',12.136,10.535],['Ganjuwa',10.895,10.178],['Giade',11.423,10.242],['Itas/Gadau',11.867,10.162],['Jama\'are',11.673,9.924],['Katagum',12.276,10.449],['Kirfi',10.371,10.401],['Misau',11.308,10.462],['Ningi',11.067,9.569],['Shira',11.483,10.022],['Tafawa Balewa',9.769,9.552],['Toro',10.082,9.077],['Warji',11.181,9.753],['Zaki',12.098,10.314]]],
+  ['Bayelsa', [['Brass',4.299,6.24],['Ekeremor',5.042,5.789],['Kolokuma/Opokuma',5.109,6.299],['Nembe',4.517,6.123],['Ogbia',4.829,6.312],['Sagbama',5.235,6.199],['Southern Ijaw',4.717,5.978],['Yenagoa',4.939,6.318]]],
+  ['Benue', [['Ado',6.777,8.025],['Agatu',7.616,8.273],['Apa',7.831,8.42],['Buruku',7.442,9.2],['Gboko',7.332,9.001],['Guma',7.804,8.667],['Gwer East',7.488,8.543],['Gwer West',7.532,8.227],['Katsina-Ala',7.169,9.285],['Konshisha',7.104,8.836],['Kwande',6.704,9.246],['Logo',7.822,9.23],['Makurdi',7.732,8.536],['Obi',7.158,8.372],['Ogbadibo',7.136,7.74],['Ohimini',7.398,7.935],['Oju',6.842,8.546],['Okpokwu',7.062,7.847],['Oturkpo',7.194,8.148],['Tarka',7.566,8.948],['Ukum',7.539,9.643],['Ushongo',7.127,8.946],['Vandeikya',6.783,9.07]]],
+  ['Borno', [['Abadam',13.211,13.368],['Askira/Uba',10.653,12.834],['Bama',11.516,13.687],['Bayo',10.36,11.791],['Biu',10.615,12.189],['Chibok',10.871,12.847],['Damboa',11.152,12.752],['Dikwa',12.034,13.921],['Gubio',12.966,12.95],['Guzamala',12.92,13.432],['Gwoza',11.081,13.695],['Hawul',10.47,12.094],['Jere',11.887,13.291],['Kaga',11.571,12.096],['Kala/Balge',11.545,14.177],['Konduga',11.676,13.423],['Kukawa',12.622,13.556],['Kwaya Kusar',10.463,11.817],['Mafa',11.976,13.593],['Magumeri',12.487,12.879],['Maiduguri',11.832,13.15],['Marte',12.243,13.837],['Mobbar',12.994,12.527],['Monguno',12.673,13.614],['Ngala',12.351,14.236],['Nganzai',12.584,13.257],['Shani',10.262,11.949]]],
+  ['Cross River', [['Abi',5.903,8.09],['Akamkpa',5.325,8.347],['Akpabuyo',4.933,8.388],['Bakassi',4.47,8.606],['Bekwarra',6.693,8.968],['Biase',5.68,8.105],['Boki',6.278,9.238],['Calabar Municipal',4.957,8.327],['Calabar South',4.946,8.317],['Etung',5.802,8.949],['Ikom',5.964,8.71],['Obanliku',6.492,9.351],['Obubra',6.081,8.336],['Obudu',6.671,9.164],['Odukpani',5.11,8.336],['Ogoja',6.654,8.798],['Yakuur',5.803,8.182],['Yala',6.755,8.83]]],
+  ['Delta', [['Aniocha North',6.359,6.548],['Aniocha South',6.171,6.433],['Bomadi',5.165,5.92],['Burutu',5.353,5.505],['Ethiope East',5.622,6.028],['Ethiope West',5.626,5.83],['Ika North East',6.226,6.298],['Ika South',6.146,6.192],['Isoko North',5.544,6.263],['Isoko South',5.376,6.197],['Ndokwa East',5.53,6.487],['Ndokwa West',5.684,6.363],['Okpe',5.591,5.86],['Oshimili North',6.172,6.684],['Oshimili South',6.129,6.696],['Patani',5.229,6.124],['Sapele',5.895,5.678],['Udu',5.484,5.758],['Ughelli North',5.514,5.999],['Ughelli South',5.326,5.988],['Ukwuani',5.601,6.487],['Uvwie',5.518,5.772],['Warri North',5.777,5.43],['Warri South',5.534,5.752],['Warri South West',5.467,5.482]]],
+  ['Ebonyi', [['Abakaliki',6.322,8.111],['Afikpo North',5.899,7.933],['Afikpo South',5.84,7.857],['Ebonyi',6.273,8.094],['Ezza North',6.486,8.066],['Ezza South',6.385,8.101],['Ikwo',5.97,8.311],['Ishielu',6.507,7.838],['Ivo',5.867,7.56],['Izzi',6.467,8.254],['Ohaozara',5.928,7.679],['Ohaukwu',6.125,7.967],['Onicha',5.923,7.846]]],
+  ['Edo', [['Akoko-Edo',7.384,6.101],['Egor',6.371,5.629],['Esan Central',6.751,6.289],['Esan North-East',6.813,6.432],['Esan South-East',6.669,6.379],['Esan West',6.781,6.218],['Etsako Central',7.113,6.498],['Etsako East',7.17,6.688],['Etsako West',7.027,6.308],['Igueben',6.539,6.399],['Ikpoba-Okha',6.34,5.685],['Oredo',6.329,5.612],['Orhionmwon',6.099,5.78],['Ovia North-East',6.484,5.525],['Ovia South-West',6.215,5.301],['Owan East',7.05,6.106],['Owan West',6.979,5.909],['Uhunmwonde',6.341,5.901]]],
+  ['Ekiti', [['Ado Ekiti',7.623,5.217],['Efon',7.698,4.888],['Ekiti East',7.647,5.513],['Ekiti South-West',7.588,5.074],['Ekiti West',7.656,5.124],['Emure',7.455,5.465],['Gbonyin',7.449,5.582],['Ido-Osi',7.695,5.188],['Ijero',7.813,5.064],['Ikere',7.507,5.232],['Ikole',7.795,5.498],['Ilejemeje',7.956,5.236],['Irepodun/Ifelodun',7.608,5.053],['Ise/Orun',7.46,5.415],['Moba',7.99,5.121],['Oye',7.788,5.328]]],
+  ['Enugu', [['Aninri',6.064,7.484],['Awgu',6.078,7.48],['Enugu East',6.448,7.532],['Enugu North',6.448,7.488],['Enugu South',6.395,7.487],['Ezeagu',6.558,7.256],['Igbo-Etiti',6.591,7.448],['Igbo-Eze North',6.982,7.452],['Igbo-Eze South',6.902,7.385],['Isi Uzo',6.765,7.717],['Nkanu East',6.304,7.626],['Nkanu West',6.398,7.478],['Nsukka',6.857,7.392],['Oji River',6.232,7.384],['Udenu',6.945,7.489],['Udi',6.318,7.41],['Uzo-Uwani',6.715,7.198]]],
+  ['FCT', [['Abaji',8.475,6.942],['Bwari',9.204,7.381],['Gwagwalada',8.943,7.08],['Kuje',8.885,7.23],['Kwali',8.828,6.956],['Municipal (Abuja)',9.058,7.495]]],
+  ['Gombe', [['Akko',10.297,11.169],['Balanga',9.931,11.557],['Billiri',9.842,11.225],['Dukku',10.822,10.777],['Funakaye',10.597,11.359],['Gombe',10.282,11.173],['Kaltungo',9.826,11.322],['Kwami',10.413,11.297],['Nafada',11.081,11.327],['Shongom',9.676,11.356],['Yamaltu/Deba',10.217,11.379]]],
+  ['Imo', [['Aboh Mbaise',5.449,7.199],['Ahiazu Mbaise',5.538,7.285],['Ehime Mbano',5.714,7.328],['Ezinihitte',5.528,7.241],['Ideato North',5.711,7.121],['Ideato South',5.648,7.107],['Ihitte/Uboma',5.634,7.374],['Ikeduru',5.534,7.096],['Isiala Mbano',5.7,7.224],['Isu',5.667,7.293],['Mbaitoli',5.577,7.042],['Ngor Okpala',5.332,7.072],['Njaba',5.674,7.106],['Nkwerre',5.758,7.107],['Nwangele',5.714,7.227],['Obowo',5.583,7.446],['Oguta',5.709,6.873],['Ohaji/Egbema',5.547,6.861],['Okigwe',5.883,7.351],['Onuimo',5.709,7.41],['Orlu',5.779,7.029],['Orsu',5.793,7.113],['Oru East',5.718,7.194],['Oru West',5.718,6.949],['Owerri Municipal',5.487,7.029],['Owerri North',5.503,7.005],['Owerri West',5.476,6.953]]],
+  ['Jigawa', [['Auyo',12.364,9.944],['Babura',12.78,9.028],['Biriniwa',12.712,10.046],['Birnin Kudu',11.45,9.478],['Buji',11.593,9.818],['Dutse',11.761,9.336],['Gagarawa',12.456,9.546],['Garki',12.458,9.285],['Gumel',12.627,9.391],['Guri',12.736,10.345],['Gwaram',11.279,9.893],['Gwiwa',12.782,8.344],['Hadejia',12.442,10.043],['Jahun',12.099,9.645],['Kafin Hausa',12.243,9.89],['Kaugama',12.488,9.917],['Kazaure',12.65,8.413],['Kiri Kasama',12.701,10.264],['Kiyawa',11.791,9.645],['Maigatari',12.801,9.447],['Malam Madori',12.56,9.869],['Miga',12.242,9.719],['Ringim',12.156,9.165],['Roni',12.562,8.262],['Sule Tankarkar',12.653,8.233],['Taura',12.283,9.377],['Yankwashi',12.745,8.576]]],
+  ['Kaduna', [['Birnin Gwari',10.648,6.54],['Chikun',10.383,7.054],['Giwa',11.312,7.454],['Igabi',10.68,7.608],['Ikara',11.167,8.217],['Jaba',9.722,8.097],['Jema\'a',9.542,8.38],['Kachia',9.872,7.869],['Kaduna North',10.538,7.434],['Kaduna South',10.472,7.419],['Kagarko',9.585,7.677],['Kajuru',10.281,7.677],['Kaura',9.731,8.365],['Kauru',10.647,8.145],['Kubau',10.97,8.313],['Kudan',11.293,7.648],['Lere',10.385,8.574],['Makarfi',11.261,7.832],['Sabon Gari',11.192,7.729],['Sanga',9.465,8.368],['Soba',10.903,8.045],['Zangon Kataf',9.814,8.312],['Zaria',11.07,7.719]]],
+  ['Kano', [['Ajingi',11.972,8.563],['Albasu',11.67,8.14],['Bagwai',12.157,8.136],['Bebeji',11.678,8.262],['Bichi',12.239,8.242],['Bunkure',11.705,8.544],['Dala',12.009,8.489],['Dambatta',12.434,8.525],['Dawakin Kudu',11.83,8.605],['Dawakin Tofa',12.101,8.345],['Doguwa',10.747,8.594],['Fagge',12.007,8.532],['Gabasawa',12.163,8.879],['Garko',11.585,8.827],['Garun Mallam',11.685,8.373],['Gaya',11.869,9.003],['Gezawa',12.108,8.735],['Gwale',11.981,8.499],['Kabo',12.048,8.158],['Kano Municipal',12.001,8.516],['Karaye',11.785,8.023],['Kibiya',11.529,8.659],['Kiru',11.704,8.132],['Kumbotso',11.897,8.505],['Kunchi',12.503,8.273],['Kura',11.781,8.431],['Madobi',11.776,8.287],['Makoda',12.405,8.356],['Minjibir',12.2,8.64],['Nasarawa',11.962,8.556],['Rano',11.557,8.573],['Rimin Gado',11.974,8.251],['Rogo',11.556,8.063],['Shanono',12.038,7.994],['Sumaila',11.53,8.989],['Takai',11.585,8.656],['Tarauni',11.96,8.544],['Tofa',12.065,8.275],['Tsanyawa',12.22,7.994],['Tudun Wada',11.241,8.432],['Ungogo',12.091,8.498],['Warawa',11.872,8.658],['Wudil',11.805,8.843]]],
+  ['Katsina', [['Bakori',11.552,7.423],['Batagarawa',12.894,7.594],['Batsari',12.752,7.249],['Baure',12.839,8.755],['Bindawa',12.675,7.8],['Charanchi',12.666,7.729],['Dandume',11.281,7.289],['Danja',11.436,7.52],['Dan Musa',12.083,7.365],['Daura',13.038,8.325],['Dutsi',12.844,8.139],['Dutsin-Ma',12.453,8.101],['Faskari',11.683,7.037],['Funtua',11.524,7.315],['Ingawa',12.635,8.043],['Jibia',12.876,7.244],['Kafur',11.655,7.689],['Kaita',13.085,7.744],['Kankara',11.93,7.408],['Kankia',12.512,7.723],['Katsina',12.985,7.617],['Kurfi',12.637,7.548],['Kusada',12.463,7.986],['Mai\'Adua',13.078,8.293],['Malumfashi',11.775,7.782],['Mani',12.831,7.867],['Mashi',12.984,8.067],['Matazu',12.201,7.692],['Musawa',12.142,7.691],['Rimi',12.53,7.683],['Sabuwa',11.313,7.136],['Safana',12.401,7.421],['Sandamu',12.953,8.369],['Zango',12.881,8.554]]],
+  ['Kebbi', [['Aleiro',12.296,4.44],['Arewa Dandi',12.859,4.221],['Argungu',12.753,4.511],['Augie',12.896,4.598],['Bagudo',11.407,4.332],['Birnin Kebbi',12.452,4.194],['Bunza',12.099,4.024],['Dandi',11.78,3.809],['Fakai',11.2,4.84],['Gwandu',12.502,4.641],['Jega',12.215,4.408],['Kalgo',12.332,4.213],['Koko/Besse',11.385,4.406],['Maiyama',12.082,4.375],['Ngaski',10.496,4.722],['Sakaba',11.065,5.731],['Shanga',11.199,4.561],['Suru',12.005,4.133],['Wasagu/Danko',11.475,5.798],['Yauri',10.718,4.775],['Zuru',11.433,5.282]]],
+  ['Kogi', [['Adavi',7.593,6.449],['Ajaokuta',7.58,6.657],['Ankpa',7.397,7.635],['Bassa',7.809,6.73],['Dekina',7.678,7.077],['Ibaji',6.8,6.775],['Idah',7.105,6.746],['Igalamela-Odolu',6.892,6.944],['Ijumu',7.875,5.958],['Kabba/Bunu',7.843,6.081],['Kogi',8.071,6.751],['Lokoja',7.796,6.742],['Mopa-Muro',8.086,5.892],['Ofu',7.345,6.763],['Ogori/Magongo',7.484,6.226],['Okehi',7.739,6.33],['Okene',7.562,6.225],['Olamaboro',7.173,7.602],['Omala',7.765,7.518],['Yagba East',8.164,5.741],['Yagba West',8.242,5.561]]],
+  ['Kwara', [['Asa',8.447,4.518],['Baruten',9.582,3.389],['Edu',8.85,5.162],['Ekiti',8.154,5.317],['Ifelodun',8.264,4.697],['Ilorin East',8.547,4.588],['Ilorin South',8.425,4.538],['Ilorin West',8.489,4.553],['Isin',8.217,5.046],['Kaiama',9.615,3.947],['Moro',8.826,4.783],['Offa',8.146,4.722],['Oke Ero',8.077,5.132],['Oyun',8.129,4.686],['Pategi',8.826,5.712]]],
+  ['Lagos', [['Agege',6.622,3.325],['Ajeromi-Ifelodun',6.442,3.319],['Alimosho',6.61,3.295],['Amuwo-Odofin',6.455,3.258],['Apapa',6.449,3.361],['Badagry',6.416,2.881],['Epe',6.585,3.983],['Eti-Osa',6.428,3.561],['Ibeju-Lekki',6.49,3.895],['Ifako-Ijaiye',6.663,3.29],['Ikeja',6.602,3.342],['Ikorodu',6.614,3.509],['Kosofe',6.579,3.397],['Lagos Island',6.454,3.393],['Lagos Mainland',6.498,3.371],['Mushin',6.533,3.349],['Ojo',6.459,3.171],['Oshodi-Isolo',6.52,3.313],['Shomolu',6.538,3.386],['Surulere',6.499,3.353]]],
+  ['Nasarawa', [['Akwanga',8.909,8.407],['Awe',8.095,9.115],['Doma',8.384,8.353],['Karu',9.003,7.617],['Keana',8.115,8.81],['Keffi',8.847,7.874],['Kokona',8.819,7.779],['Lafia',8.503,8.519],['Nasarawa',8.532,7.704],['Nasarawa Eggon',8.762,8.55],['Obi',8.434,8.67],['Toto',8.396,6.896],['Wamba',8.943,8.61]]],
+  ['Niger', [['Agaie',9.01,6.32],['Agwara',10.709,4.58],['Bida',9.08,6.011],['Borgu',10.039,4.119],['Bosso',9.636,6.524],['Chanchaga',9.557,6.55],['Edati',9.026,5.629],['Gbako',9.175,5.981],['Gurara',9.469,6.764],['Katcha',8.923,6.132],['Kontagora',10.398,5.473],['Lapai',9.051,6.569],['Lavun',9.101,5.829],['Magama',10.472,5.049],['Mariga',10.635,5.706],['Mashegu',9.917,5.203],['Mokwa',9.293,5.065],['Munya',9.617,6.935],['Paikoro',9.43,6.753],['Rafi',10.184,6.494],['Rijau',11.105,5.257],['Shiroro',9.752,6.815],['Suleja',9.184,7.179],['Tafa',9.247,7.268],['Wushishi',9.769,6.075]]],
+  ['Ogun', [['Abeokuta North',7.199,3.332],['Abeokuta South',7.134,3.347],['Ado-Odo/Ota',6.666,3.204],['Egbado North',7.232,2.903],['Egbado South',7.092,2.98],['Ewekoro',6.909,3.202],['Ifo',6.821,3.193],['Ijebu East',6.722,4.045],['Ijebu North',6.928,3.932],['Ijebu North East',6.819,4.022],['Ijebu Ode',6.819,3.928],['Ikenne',6.872,3.715],['Imeko Afon',7.432,2.816],['Ipokia',6.526,2.824],['Obafemi Owode',7.013,3.314],['Odeda',7.233,3.514],['Odogbolu',6.783,3.762],['Ogun Waterside',6.618,4.241],['Remo North',6.966,3.642],['Sagamu',6.847,3.639]]],
+  ['Ondo', [['Akoko North-East',7.537,5.754],['Akoko North-West',7.627,5.697],['Akoko South-East',7.444,5.808],['Akoko South-West',7.383,5.724],['Akure North',7.265,5.165],['Akure South',7.244,5.195],['Ese-Odo',6.448,4.935],['Idanre',7.112,5.145],['Ifedore',7.394,5.144],['Ilaje',6.345,4.819],['Ile-Oluji/Okeigbo',7.257,4.868],['Irele',6.453,5.044],['Odigbo',6.782,4.859],['Okitipupa',6.503,4.781],['Ondo East',7.065,4.938],['Ondo West',7.086,4.835],['Ose',7.029,5.584],['Owo',7.194,5.588]]],
+  ['Osun', [['Aiyedaade',7.266,4.339],['Aiyedire',7.493,4.239],['Atakunmosa East',7.409,4.671],['Atakunmosa West',7.333,4.56],['Boluwaduro',7.808,4.725],['Boripe',7.835,4.635],['Ede North',7.742,4.464],['Ede South',7.718,4.436],['Egbedore',7.676,4.426],['Ejigbo',7.904,4.311],['Ife Central',7.481,4.56],['Ife East',7.472,4.631],['Ife North',7.575,4.562],['Ife South',7.344,4.602],['Ifedayo',7.809,4.976],['Ifelodun',7.85,4.667],['Ila',8.007,4.905],['Ilesa East',7.638,4.732],['Ilesa West',7.636,4.691],['Irepodun',7.632,4.663],['Irewole',7.417,4.188],['Isokan',7.312,4.187],['Iwo',7.631,4.182],['Obokun',7.683,4.765],['Odo-Otin',7.953,4.682],['Ola-Oluwa',7.764,4.152],['Olorunda',7.788,4.582],['Oriade',7.522,4.86],['Orolu',7.886,4.524],['Osogbo',7.772,4.556]]],
+  ['Oyo', [['Afijio',7.72,3.893],['Akinyele',7.508,3.898],['Atiba',7.875,3.951],['Atisbo',8.526,3.415],['Egbeda',7.389,3.946],['Ibadan North',7.403,3.912],['Ibadan North-East',7.407,3.947],['Ibadan North-West',7.388,3.88],['Ibadan South-East',7.369,3.904],['Ibadan South-West',7.365,3.867],['Ibarapa Central',7.382,3.216],['Ibarapa East',7.507,3.16],['Ibarapa North',7.53,3.098],['Ido',7.456,3.69],['Irepo',8.201,3.552],['Iseyin',7.855,3.602],['Itesiwaju',8.16,3.519],['Iwajowa',8.194,3.577],['Kajola',8.051,3.435],['Lagelu',7.522,3.932],['Ogbomosho North',8.134,4.252],['Ogbomosho South',8.063,4.243],['Ogo Oluwa',8.028,4.184],['Olorunsogo',8.397,3.811],['Oluyole',7.306,3.885],['Ona Ara',7.323,3.913],['Orelope',8.266,3.596],['Ori Ire',8.256,4.06],['Oyo East',7.838,3.968],['Oyo West',7.836,3.883],['Saki East',8.594,3.492],['Saki West',8.673,3.391],['Surulere',8.068,4.113]]],
+  ['Plateau', [['Barkin Ladi',9.549,8.905],['Bassa',10.169,8.74],['Bokkos',9.286,9.009],['Jos East',9.925,9.101],['Jos North',9.929,8.891],['Jos South',9.777,8.861],['Kanam',9.473,10.027],['Kanke',9.421,9.518],['Langtang North',9.347,9.78],['Langtang South',9.148,9.792],['Mangu',9.53,9.314],['Mikang',9.097,9.868],['Pankshin',9.35,9.448],['Qua\'an Pan',8.825,9.154],['Riyom',9.737,8.746],['Shendam',8.93,9.508],['Wase',8.977,9.956]]],
+  ['Rivers', [['Abua-Odual',4.859,6.586],['Ahoada East',5.084,6.649],['Ahoada West',5.131,6.466],['Akuku-Toru',4.783,6.8],['Andoni',4.61,7.363],['Asari-Toru',4.859,6.978],['Bonny',4.426,7.164],['Degema',4.761,6.787],['Eleme',4.799,7.12],['Emohua',5.016,6.854],['Etche',5.001,7.034],['Gokana',4.675,7.264],['Ikwerre',5.056,6.955],['Khana',4.786,7.296],['Obio/Akpor',4.845,6.983],['Ogba/Egbema/Ndoni',5.291,6.704],['Ogu/Bolo',4.697,7.247],['Okrika',4.742,7.09],['Omuma',5.064,7.262],['Opobo/Nkoro',4.564,7.496],['Oyigbo',4.888,7.123],['Port Harcourt',4.783,6.998],['Tai',4.755,7.269]]],
+  ['Sokoto', [['Binji',13.214,4.924],['Bodinga',12.882,5.159],['Dange Shuni',12.847,5.34],['Gada',13.72,5.463],['Goronyo',13.496,5.809],['Gudu',13.268,5.12],['Gwadabawa',13.25,5.235],['Illela',13.711,5.228],['Isa',13.247,6.005],['Kebbe',12.345,4.685],['Kware',13.178,5.235],['Rabah',13.172,5.425],['Sabon Birni',13.587,6.155],['Shagari',12.611,4.949],['Silame',12.977,4.658],['Sokoto North',13.058,5.238],['Sokoto South',13.036,5.232],['Tambuwal',12.384,4.742],['Tangaza',13.65,5.248],['Tureta',12.596,5.527],['Wamako',13.023,5.101],['Wurno',13.291,5.419],['Yabo',12.556,5.018]]],
+  ['Taraba', [['Ardo Kola',8.825,11.128],['Bali',7.851,10.963],['Donga',7.445,10.055],['Gashaka',7.602,11.408],['Gassol',8.536,10.632],['Ibi',8.08,9.812],['Jalingo',8.892,11.365],['Karim Lamido',9.275,10.851],['Kurmi',6.934,10.651],['Lau',9.132,11.274],['Sardauna',7.696,11.197],['Takum',7.831,9.984],['Ussa',7.783,10.174],['Wukari',7.903,9.751],['Yorro',8.938,11.629],['Zing',8.988,11.715]]],
+  ['Yobe', [['Bade',12.928,11.014],['Bursari',12.796,11.843],['Damaturu',11.748,11.957],['Fika',11.168,11.202],['Fune',11.808,11.433],['Geidam',12.893,11.928],['Gujba',11.103,11.93],['Gulani',10.872,11.748],['Jakusko',12.375,10.958],['Karasuwa',13.02,10.945],['Machina',13.137,10.064],['Nangere',11.869,11.062],['Nguru',12.877,10.453],['Potiskum',11.708,11.069],['Tarmuwa',12.207,11.719],['Yunusari',13.107,11.756],['Yusufari',12.903,11.127]]],
+  ['Zamfara', [['Anka',12.179,6.014],['Bakura',12.666,5.788],['Birnin Magaji/Kiyaw',12.46,6.089],['Bukkuyum',11.584,5.723],['Bungudu',12.28,6.551],['Gummi',11.965,5.547],['Gusau',12.163,6.662],['Kaura Namoda',12.583,6.589],['Maradun',12.22,5.847],['Maru',12.334,6.407],['Shinkafi',13.083,6.508],['Talata Mafara',12.567,6.059],['Tsafe',12.062,6.944],['Zurmi',12.765,6.78]]]
+];
 
-/* ================= PLANT ================= */
-async function identifyPlant() {
-  const file = document.getElementById("plantImage").files[0];
-  const box = document.getElementById("plantResult");
+const ALL_LGAS = {};
+LGA_DATA.forEach(([state, lgas]) => { ALL_LGAS[state] = lgas.map(([name, lat, lon]) => ({name, lat, lon})); });
+const STATE_CENTROIDS = {};
+LGA_DATA.forEach(([state, lgas]) => { const avgLat = lgas.reduce((s,x)=>s+x[1],0)/lgas.length; const avgLon = lgas.reduce((s,x)=>s+x[2],0)/lgas.length; STATE_CENTROIDS[state]={lat:avgLat,lon:avgLon}; });
 
-  if (!file) return alert("Select plant image");
+// ── SOIL FALLBACK DATABASE (reliable per state) ──
+const STATE_SOIL_FALLBACK = {
+  'Abia': {ph:5.8, clay:30, sand:40, silt:30, soc:15, wrb:'Acrisol', texture:'Sandy clay loam', detail:'Typical Abia soil'},
+  'Adamawa': {ph:6.1, clay:28, sand:42, silt:30, soc:12, wrb:'Lixisol', texture:'Sandy loam', detail:'Savannah soil'},
+  'Akwa Ibom': {ph:5.5, clay:35, sand:30, silt:35, soc:18, wrb:'Acrisol', texture:'Sandy clay', detail:'Rainforest soil'},
+  'Anambra': {ph:6.0, clay:32, sand:38, silt:30, soc:14, wrb:'Acrisol', texture:'Sandy clay loam', detail:'Fertile plain'},
+  'Bauchi': {ph:6.4, clay:30, sand:40, silt:30, soc:11, wrb:'Lixisol', texture:'Sandy clay', detail:'Northern savannah'},
+  'Bayelsa': {ph:5.4, clay:40, sand:25, silt:35, soc:20, wrb:'Ferralsol', texture:'Clay', detail:'Swampy soil'},
+  'Benue': {ph:6.0, clay:28, sand:42, silt:30, soc:14, wrb:'Acrisol', texture:'Sandy loam', detail:'Riverine soil'},
+  'Borno': {ph:7.0, clay:35, sand:35, silt:30, soc:9, wrb:'Lixisol', texture:'Sandy clay', detail:'Sahelian soil'},
+  'Cross River': {ph:5.6, clay:32, sand:38, silt:30, soc:17, wrb:'Acrisol', texture:'Sandy clay loam', detail:'Tropical forest soil'},
+  'Delta': {ph:5.4, clay:40, sand:25, silt:35, soc:20, wrb:'Ferralsol', texture:'Clay', detail:'Mangrove swamp'},
+  'Ebonyi': {ph:5.9, clay:30, sand:40, silt:30, soc:15, wrb:'Acrisol', texture:'Sandy clay loam', detail:'Moderately fertile'},
+  'Edo': {ph:5.9, clay:28, sand:42, silt:30, soc:15, wrb:'Acrisol', texture:'Sandy loam', detail:'Forest-savannah mosaic'},
+  'Ekiti': {ph:6.0, clay:25, sand:45, silt:30, soc:13, wrb:'Acrisol', texture:'Sandy loam', detail:'Moderate drainage'},
+  'Enugu': {ph:5.7, clay:32, sand:38, silt:30, soc:16, wrb:'Acrisol', texture:'Sandy clay loam', detail:'Derived savannah'},
+  'FCT': {ph:6.0, clay:28, sand:45, silt:27, soc:14, wrb:'Acrisol', texture:'Sandy loam', detail:'Central plateau'},
+  'Gombe': {ph:6.3, clay:30, sand:40, silt:30, soc:12, wrb:'Lixisol', texture:'Sandy clay', detail:'Northern Guinea'},
+  'Imo': {ph:5.8, clay:32, sand:38, silt:30, soc:15, wrb:'Acrisol', texture:'Sandy clay loam', detail:'Rainforest zone'},
+  'Jigawa': {ph:6.7, clay:32, sand:38, silt:30, soc:10, wrb:'Lixisol', texture:'Sandy clay', detail:'Dry savannah'},
+  'Kaduna': {ph:6.4, clay:30, sand:40, silt:30, soc:11, wrb:'Lixisol', texture:'Sandy clay', detail:'Northern Guinea'},
+  'Kano': {ph:6.8, clay:35, sand:35, silt:30, soc:10, wrb:'Lixisol', texture:'Sandy clay', detail:'Northern savannah'},
+  'Katsina': {ph:6.8, clay:34, sand:36, silt:30, soc:9, wrb:'Lixisol', texture:'Sandy clay', detail:'Sahelian margin'},
+  'Kebbi': {ph:6.5, clay:32, sand:38, silt:30, soc:10, wrb:'Lixisol', texture:'Sandy clay', detail:'Sudan savannah'},
+  'Kogi': {ph:6.1, clay:28, sand:42, silt:30, soc:13, wrb:'Acrisol', texture:'Sandy loam', detail:'Guinea savannah'},
+  'Kwara': {ph:6.3, clay:26, sand:44, silt:30, soc:12, wrb:'Acrisol', texture:'Sandy loam', detail:'Guinea savannah'},
+  'Lagos': {ph:6.2, clay:25, sand:50, silt:25, soc:12, wrb:'Arenosol', texture:'Sandy loam', detail:'Coastal plain'},
+  'Nasarawa': {ph:6.0, clay:28, sand:42, silt:30, soc:13, wrb:'Acrisol', texture:'Sandy loam', detail:'Middle belt'},
+  'Niger': {ph:6.2, clay:30, sand:40, silt:30, soc:12, wrb:'Lixisol', texture:'Sandy clay', detail:'Northern Guinea'},
+  'Ogun': {ph:6.1, clay:22, sand:48, silt:30, soc:13, wrb:'Acrisol', texture:'Sandy loam', detail:'Guinea savannah'},
+  'Ondo': {ph:5.9, clay:25, sand:45, silt:30, soc:14, wrb:'Acrisol', texture:'Sandy loam', detail:'Forest zone'},
+  'Osun': {ph:6.0, clay:24, sand:46, silt:30, soc:13, wrb:'Acrisol', texture:'Sandy loam', detail:'Forest-savannah'},
+  'Oyo': {ph:6.1, clay:22, sand:48, silt:30, soc:13, wrb:'Acrisol', texture:'Sandy loam', detail:'Guinea savannah'},
+  'Plateau': {ph:5.8, clay:28, sand:42, silt:30, soc:15, wrb:'Acrisol', texture:'Sandy loam', detail:'High plateau'},
+  'Rivers': {ph:5.5, clay:35, sand:30, silt:35, soc:18, wrb:'Ferralsol', texture:'Clay loam', detail:'Rainforest'},
+  'Sokoto': {ph:7.0, clay:35, sand:35, silt:30, soc:8, wrb:'Lixisol', texture:'Sandy clay', detail:'Sahelian'},
+  'Taraba': {ph:6.0, clay:28, sand:42, silt:30, soc:13, wrb:'Acrisol', texture:'Sandy loam', detail:'Savannah transition'},
+  'Yobe': {ph:7.2, clay:33, sand:37, silt:30, soc:8, wrb:'Lixisol', texture:'Sandy clay', detail:'Dry Sahel'},
+  'Zamfara': {ph:6.5, clay:32, sand:38, silt:30, soc:9, wrb:'Lixisol', texture:'Sandy clay', detail:'Northern savannah'}
+};
 
-  let formData = new FormData();
-  formData.append("image", file);
+// ════════════ CROP DATABASE WITH CATEGORIES ════
+const CROPS_DB = [
+  // Staples
+  { name:'Cassava', icon:'🍠', unit:'t/ha', category:'Staple', req:{rainMin:700,rainMax:2500,tempMin:20,tempMax:36,phMin:4.5,phMax:7.0,droughtTol:5,months:12}, varieties:[{ n:'Game Changer', y:32, fert:'NPK 15-15-15 @250kg/ha + compost' }] },
+  { name:'Yam', icon:'🍠', unit:'t/ha', category:'Staple', req:{rainMin:1000,rainMax:2500,tempMin:25,tempMax:35,phMin:5.5,phMax:7.0,droughtTol:2,months:9}, varieties:[{ n:'Dioscorea rotundata', y:25, fert:'NPK 200kg/ha + organic mulch' }] },
+  { name:'Maize', icon:'🌽', unit:'t/ha', category:'Staple', req:{rainMin:500,rainMax:1800,tempMin:18,tempMax:36,phMin:5.5,phMax:7.0,droughtTol:3,months:4}, varieties:[{ n:'SAMMAZ 29', y:5.5, fert:'NPK 300kg/ha + Urea 100kg/ha' }] },
+  { name:'Rice', icon:'🌾', unit:'t/ha', category:'Staple', req:{rainMin:700,rainMax:3000,tempMin:20,tempMax:35,phMin:5.0,phMax:7.5,droughtTol:2,months:5}, varieties:[{ n:'NERICA 4', y:3.5, fert:'NPK 150kg/ha + Urea 60kg/ha' }] },
+  { name:'Sorghum', icon:'🌾', unit:'t/ha', category:'Staple', req:{rainMin:400,rainMax:1200,tempMin:22,tempMax:42,phMin:5.0,phMax:8.0,droughtTol:5,months:5}, varieties:[{ n:'SAMSORG 40', y:3.0, fert:'NPK 150kg/ha basal' }] },
+  { name:'Millet', icon:'🌾', unit:'t/ha', category:'Staple', req:{rainMin:350,rainMax:900,tempMin:25,tempMax:40,phMin:5.5,phMax:8.0,droughtTol:5,months:4}, varieties:[{ n:'Sosat-C88', y:2.5, fert:'NPK 100kg/ha' }] },
+  { name:'Cowpea', icon:'🫘', unit:'t/ha', category:'Staple', req:{rainMin:300,rainMax:900,tempMin:20,tempMax:35,phMin:5.5,phMax:7.5,droughtTol:5,months:3}, varieties:[{ n:'IT89KD-288', y:1.2, fert:'SSP 100kg/ha' }] },
 
-  box.innerHTML = "<span class='loading'>⏳ Identifying plant...</span>";
+  // Cash Crops
+  { name:'Groundnut', icon:'🥜', unit:'t/ha', category:'Cash Crop', req:{rainMin:450,rainMax:1100,tempMin:22,tempMax:38,phMin:5.5,phMax:7.0,droughtTol:4,months:4}, varieties:[{ n:'SAMNUT 22', y:1.5, fert:'SSP 150kg/ha + Gypsum' }] },
+  { name:'Soybean', icon:'🫛', unit:'t/ha', category:'Cash Crop', req:{rainMin:450,rainMax:1100,tempMin:20,tempMax:32,phMin:6.0,phMax:7.0,droughtTol:3,months:4}, varieties:[{ n:'TGX 1448-2E', y:2.0, fert:'NPK 100kg/ha + inoculant' }] },
+  { name:'Cotton', icon:'☁️', unit:'t/ha', category:'Cash Crop', req:{rainMin:500,rainMax:1200,tempMin:22,tempMax:36,phMin:5.5,phMax:7.5,droughtTol:4,months:6}, varieties:[{ n:'SAMCOT 8', y:1.0, fert:'NPK 150kg/ha' }] },
+  { name:'Sugarcane', icon:'🎋', unit:'t/ha', category:'Cash Crop', req:{rainMin:1000,rainMax:2000,tempMin:20,tempMax:35,phMin:6.0,phMax:7.5,droughtTol:4,months:12}, varieties:[{ n:'Co 421', y:80, fert:'NPK 200kg/ha + Urea' }] },
+  { name:'Sesame', icon:'🫘', unit:'t/ha', category:'Cash Crop', req:{rainMin:400,rainMax:900,tempMin:25,tempMax:38,phMin:5.5,phMax:7.5,droughtTol:5,months:4}, varieties:[{ n:'E8', y:1.0, fert:'NPK 100kg/ha' }] },
+  { name:'Sunflower', icon:'🌻', unit:'t/ha', category:'Cash Crop', req:{rainMin:500,rainMax:1500,tempMin:18,tempMax:32,phMin:6.0,phMax:7.5,droughtTol:4,months:5}, varieties:[{ n:'Record', y:1.5, fert:'NPK 120kg/ha' }] },
+  { name:'Bambara nut', icon:'🥜', unit:'t/ha', category:'Cash Crop', req:{rainMin:300,rainMax:800,tempMin:22,tempMax:38,phMin:5.0,phMax:7.5,droughtTol:5,months:4}, varieties:[{ n:'TVSu 1234', y:1.0, fert:'SSP 100kg/ha' }] },
 
-  try {
-    const res = await fetch(BASE_URL + "/identify", {
-      method: "POST",
-      body: formData
-    });
+  // Vegetables
+  { name:'Tomato', icon:'🍅', unit:'t/ha', category:'Vegetable', req:{rainMin:400,rainMax:800,tempMin:18,tempMax:30,phMin:6.0,phMax:7.0,droughtTol:2,months:4}, varieties:[{ n:'Roma VF', y:30, fert:'NPK 200kg/ha + drip irrigation' }] },
+  { name:'Pepper', icon:'🌶️', unit:'t/ha', category:'Vegetable', req:{rainMin:600,rainMax:1500,tempMin:20,tempMax:32,phMin:5.5,phMax:7.0,droughtTol:3,months:5}, varieties:[{ n:'Shombo', y:15, fert:'NPK 150kg/ha + poultry manure' }] },
+  { name:'Onion', icon:'🧅', unit:'t/ha', category:'Vegetable', req:{rainMin:400,rainMax:800,tempMin:15,tempMax:28,phMin:6.0,phMax:7.5,droughtTol:2,months:5}, varieties:[{ n:'Red Creole', y:25, fert:'NPK 120kg/ha + Gypsum' }] },
+  { name:'Okra', icon:'🫒', unit:'t/ha', category:'Vegetable', req:{rainMin:500,rainMax:1200,tempMin:22,tempMax:35,phMin:6.0,phMax:7.5,droughtTol:4,months:4}, varieties:[{ n:'NHAe 47-4', y:10, fert:'NPK 100kg/ha + compost' }] },
+  { name:'Watermelon', icon:'🍉', unit:'t/ha', category:'Vegetable', req:{rainMin:300,rainMax:700,tempMin:22,tempMax:35,phMin:6.0,phMax:7.0,droughtTol:4,months:3}, varieties:[{ n:'Sugar Baby', y:20, fert:'NPK 150kg/ha + micronutrients' }] },
+  { name:'Amaranth', icon:'🥬', unit:'t/ha', category:'Vegetable', req:{rainMin:500,rainMax:1500,tempMin:20,tempMax:35,phMin:5.5,phMax:7.5,droughtTol:3,months:3}, varieties:[{ n:'Local leaf', y:12, fert:'NPK 100kg/ha + organic' }] },
+  { name:'Ugu (Fluted Pumpkin)', icon:'🎃', unit:'t/ha', category:'Vegetable', req:{rainMin:800,rainMax:1800,tempMin:22,tempMax:32,phMin:5.5,phMax:7.0,droughtTol:2,months:6}, varieties:[{ n:'Telfairia occidentalis', y:8, fert:'NPK 150kg/ha + poultry droppings' }] },
+  { name:'Cabbage', icon:'🥬', unit:'t/ha', category:'Vegetable', req:{rainMin:500,rainMax:900,tempMin:15,tempMax:25,phMin:6.0,phMax:7.5,droughtTol:2,months:5}, varieties:[{ n:'Green Pearl', y:35, fert:'NPK 200kg/ha + organic manure' }] },
+  { name:'Carrot', icon:'🥕', unit:'t/ha', category:'Vegetable', req:{rainMin:400,rainMax:800,tempMin:15,tempMax:25,phMin:6.0,phMax:7.0,droughtTol:2,months:4}, varieties:[{ n:'Royal Chantenay', y:25, fert:'NPK 120kg/ha + potassium' }] },
+  { name:'Cucumber', icon:'🥒', unit:'t/ha', category:'Vegetable', req:{rainMin:400,rainMax:900,tempMin:18,tempMax:30,phMin:6.0,phMax:7.0,droughtTol:3,months:3}, varieties:[{ n:'Marketmore', y:20, fert:'NPK 150kg/ha + drip' }] },
 
-    const data = await res.json();
+  // Fruits
+  { name:'Banana', icon:'🍌', unit:'t/ha', category:'Fruit', req:{rainMin:1200,rainMax:2500,tempMin:22,tempMax:32,phMin:5.5,phMax:7.0,droughtTol:2,months:12}, varieties:[{ n:'Grand Naine', y:20, fert:'NPK 200kg/ha + organic mulch' }] },
+  { name:'Plantain', icon:'🍌', unit:'t/ha', category:'Fruit', req:{rainMin:1200,rainMax:2500,tempMin:22,tempMax:32,phMin:5.5,phMax:7.0,droughtTol:2,months:12}, varieties:[{ n:'False Horn', y:15, fert:'NPK 200kg/ha + compost' }] },
+  { name:'Pineapple', icon:'🍍', unit:'t/ha', category:'Fruit', req:{rainMin:600,rainMax:1500,tempMin:20,tempMax:32,phMin:5.0,phMax:6.5,droughtTol:4,months:18}, varieties:[{ n:'Smooth Cayenne', y:30, fert:'NPK 150kg/ha + micronutrients' }] },
+  { name:'Pawpaw', icon:'🍈', unit:'t/ha', category:'Fruit', req:{rainMin:800,rainMax:1500,tempMin:20,tempMax:32,phMin:5.5,phMax:7.0,droughtTol:2,months:8}, varieties:[{ n:'Sunrise Solo', y:18, fert:'NPK 150kg/ha + compost' }] },
+  { name:'Guava', icon:'🍐', unit:'t/ha', category:'Fruit', req:{rainMin:600,rainMax:1200,tempMin:20,tempMax:32,phMin:5.5,phMax:7.0,droughtTol:4,months:8}, varieties:[{ n:'Allahabad Safeda', y:12, fert:'NPK 100kg/ha' }] },
+  { name:'Avocado', icon:'🥑', unit:'t/ha', category:'Fruit', req:{rainMin:800,rainMax:1800,tempMin:18,tempMax:30,phMin:5.5,phMax:7.0,droughtTol:3,months:8}, varieties:[{ n:'Hass', y:10, fert:'NPK 150kg/ha + organic' }] },
+  { name:'Mango', icon:'🥭', unit:'t/ha', category:'Fruit', req:{rainMin:500,rainMax:1200,tempMin:24,tempMax:35,phMin:5.5,phMax:7.5,droughtTol:5,months:12}, varieties:[{ n:'Julie', y:15, fert:'NPK 150kg/ha + manure' }] },
+  { name:'Orange', icon:'🍊', unit:'t/ha', category:'Fruit', req:{rainMin:800,rainMax:1500,tempMin:18,tempMax:32,phMin:5.5,phMax:7.0,droughtTol:3,months:12}, varieties:[{ n:'Valencia', y:20, fert:'NPK 200kg/ha + organic' }] },
 
-    box.innerHTML =
-      `🌿 Result:<br><b>${data.bestMatch || "No result"}</b><br><br>
-       📊 Score data:<br>
-       <pre>${JSON.stringify(data, null, 2)}</pre>`;
+  // Tree Crops (overlaps with fruit, but classified separately as tree crops)
+  { name:'Cocoa', icon:'🍫', unit:'t/ha', category:'Tree Crop', req:{rainMin:1200,rainMax:2500,tempMin:21,tempMax:32,phMin:5.5,phMax:7.0,droughtTol:2,months:12}, varieties:[{ n:'Forastero', y:1.0, fert:'NPK 200kg/ha + shade management' }] },
+  { name:'Oil Palm', icon:'🌴', unit:'t/ha', category:'Tree Crop', req:{rainMin:1500,rainMax:3000,tempMin:24,tempMax:32,phMin:5.0,phMax:7.0,droughtTol:3,months:12}, varieties:[{ n:'Tenera', y:15, fert:'NPK 300kg/ha + Kieserite' }] },
+  { name:'Cashew', icon:'🌰', unit:'t/ha', category:'Tree Crop', req:{rainMin:500,rainMax:1200,tempMin:24,tempMax:36,phMin:5.0,phMax:7.0,droughtTol:5,months:12}, varieties:[{ n:'Brazilian', y:1.5, fert:'NPK 100kg/ha' }] },
+  { name:'Mango (Tree)', icon:'🥭', unit:'t/ha', category:'Tree Crop', req:{rainMin:500,rainMax:1200,tempMin:24,tempMax:35,phMin:5.5,phMax:7.5,droughtTol:5,months:12}, varieties:[{ n:'Julie', y:15, fert:'NPK 150kg/ha + manure' }] },
+  { name:'Orange (Tree)', icon:'🍊', unit:'t/ha', category:'Tree Crop', req:{rainMin:800,rainMax:1500,tempMin:18,tempMax:32,phMin:5.5,phMax:7.0,droughtTol:3,months:12}, varieties:[{ n:'Valencia', y:20, fert:'NPK 200kg/ha + organic' }] },
+  { name:'Avocado (Tree)', icon:'🥑', unit:'t/ha', category:'Tree Crop', req:{rainMin:800,rainMax:1800,tempMin:18,tempMax:30,phMin:5.5,phMax:7.0,droughtTol:3,months:8}, varieties:[{ n:'Hass', y:10, fert:'NPK 150kg/ha + organic' }] }
+];
 
-  } catch (err) {
-    box.innerHTML = "<span class='error'>❌ Error: " + err.message + "</span>";
+// App state
+let F = { lat:null, lon:null, state:'', lga:'', farmHa:2, water:'Rain-fed Only',
+          soilObs:'Use Live Soil Data', goal:'Food Security',
+          advice:['When to plant','What to grow','Fertilizer plan'], concern:'None',
+          weather:null, soil:null, climate:null };
+
+// ── UI HELPERS ─────────────────────────────────────
+function goStep(n){ for(let i=1;i<=4;i++){ document.getElementById('p'+i).classList.toggle('active',i===n); let h=document.getElementById('sh'+i); if(h) h.classList.toggle('active',i===n); if(h&&i<n) h.classList.add('done'); } document.getElementById('progress').style.width=(n*25)+'%'; if(n===4) runResults(); }
+function sc(el,grp){ document.querySelectorAll('#'+grp+'-chips .chip').forEach(c=>c.classList.remove('on')); el.classList.add('on'); let v=el.textContent.replace(/^\S+\s/,'').trim(); if(grp==='water') F.water=v; if(grp==='soil-obs') F.soilObs=v; if(grp==='goal') F.goal=v; if(grp==='concern') F.concern=v; }
+function tm(el){ el.classList.toggle('on'); let v=el.textContent.replace(/^\S+\s/,'').trim(); if(el.classList.contains('on')){ if(!F.advice.includes(v)) F.advice.push(v); } else F.advice=F.advice.filter(x=>x!==v); }
+function checkS1(){ F.state=document.getElementById('sel-state').value; F.lga=document.getElementById('sel-lga').value; document.getElementById('btn-s1').disabled=!(F.state&&F.lga); }
+function set(id,v){ let e=document.getElementById(id); if(e) e.textContent=v; }
+function showMsg(id,cls,msg){ let e=document.getElementById(id); if(e) e.innerHTML=`<div class="alert ${cls}">${msg}</div>`; }
+function clearLiveDisplay(){ ['ld-temp','ld-hum','ld-rain','ld-wind','ld-cloud','ld-uv','ld-annual-rain','ld-avg-temp','ld-dry-months','ld-wet-months','ldb-loc'].forEach(id=>set(id,'—')); document.getElementById('soil-result').innerHTML='<div class="ldb-badge" style="background:rgba(82,183,136,.2)">Select a location to fetch soil</div>'; }
+function resetToNewLocation(){ F.lat=null;F.lon=null;F.state='';F.lga=''; F.weather=null;F.soil=null;F.climate=null; clearLiveDisplay(); document.getElementById('live-block').classList.remove('show'); document.getElementById('sel-state').value=''; document.getElementById('sel-lga').innerHTML='<option value="">— Select LGA —</option>'; document.getElementById('btn-s1').disabled=true; goStep(1); }
+
+// ── STATE & LGA ─────────────────────────────────────
+function onStateChange(){
+  clearLiveDisplay();
+  F.state = document.getElementById('sel-state').value;
+  const lgaSel = document.getElementById('sel-lga');
+  lgaSel.innerHTML = '<option value="">— Select LGA —</option>';
+  if (F.state && ALL_LGAS[F.state]) {
+    ALL_LGAS[F.state].forEach(l => { const o = document.createElement('option'); o.value = l.name; o.textContent = l.name; lgaSel.appendChild(o); });
+  }
+  if (F.state && STATE_CENTROIDS[F.state] && !F.lat) {
+    const c = STATE_CENTROIDS[F.state];
+    F.lat = c.lat; F.lon = c.lon;
+    document.getElementById('live-block').classList.add('show');
+    loadAllData(F.lat, F.lon);
+  }
+  checkS1();
+}
+function refreshDataForLGA(){
+  const state = document.getElementById('sel-state').value;
+  const lgaName = document.getElementById('sel-lga').value;
+  if (state && lgaName && ALL_LGAS[state]) {
+    const lga = ALL_LGAS[state].find(l => l.name === lgaName);
+    if (lga) { F.lat = lga.lat; F.lon = lga.lon; document.getElementById('live-block').classList.add('show'); loadAllData(F.lat, F.lon); }
   }
 }
 
-/* ================= DISEASE ================= */
-async function detectDisease() {
-  const file = document.getElementById("diseaseImage").files[0];
-  const box = document.getElementById("diseaseResult");
-
-  if (!file) return alert("Select disease image");
-
-  let formData = new FormData();
-  formData.append("image", file);
-
-  box.innerHTML = "<span class='loading'>⏳ Checking plant health...</span>";
-
-  try {
-    const res = await fetch(BASE_URL + "/detect-disease", {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await res.json();
-
-    if (!data || data.error) {
-      box.innerHTML = "<span class='error'>⚠️ Server error or model issue</span>";
-      return;
+// ── GPS ────────────────────────────────────────────
+async function doGPS(){
+  if(!navigator.geolocation){ showMsg('loc-msg','a-amber','GPS not supported'); return; }
+  showMsg('loc-msg','a-sky','📡 Detecting location...');
+  navigator.geolocation.getCurrentPosition(async pos=>{
+    F.lat=pos.coords.latitude; F.lon=pos.coords.longitude;
+    showMsg('loc-msg','a-green',`✅ GPS: ${F.lat.toFixed(4)}, ${F.lon.toFixed(4)} – fetching live data`);
+    snapToNearestLGA();
+    document.getElementById('live-block').classList.add('show');
+    await loadAllData(F.lat, F.lon);
+    checkS1();
+  }, err=>{ showMsg('loc-msg','a-amber','GPS denied or failed. Select state manually.'); });
+}
+function snapToNearestLGA(){
+  let minDist=Infinity, bestState, bestLga;
+  for(const [state, lgas] of Object.entries(ALL_LGAS)){
+    for(const lga of lgas){
+      const d = Math.hypot(F.lat-lga.lat, F.lon-lga.lon);
+      if(d<minDist){ minDist=d; bestState=state; bestLga=lga.name; }
     }
-
-    const result = data.result || "No result";
-    const confidence = data.confidence
-      ? (data.confidence * 100).toFixed(2)
-      : "0";
-
-    box.innerHTML =
-      `🦠 Result: <b>${result}</b><br>
-       📊 Confidence: ${confidence}%`;
-
-  } catch (err) {
-    box.innerHTML = "<span class='error'>❌ Error: " + err.message + "</span>";
+  }
+  if(bestState){
+    document.getElementById('sel-state').value = bestState;
+    onStateChange();
+    document.getElementById('sel-lga').value = bestLga;
+    checkS1();
+    const lga = ALL_LGAS[bestState].find(l=>l.name===bestLga);
+    if(lga){ F.lat=lga.lat; F.lon=lga.lon; }
   }
 }
 
-</script>
+// ── DUAL WEATHER (Weatherbit → OWM → fallback) ──
+async function fetchWeatherbitWeather(lat, lon){
+  try{
+    const url=`https://api.weatherbit.io/v2.0/current?lat=${lat}&lon=${lon}&key=${WEATHERBIT_KEY}`;
+    const res=await fetch(url);
+    if(!res.ok) throw new Error('Weatherbit failed');
+    const json=await res.json();
+    const d=json.data[0];
+    return { temp:d.temp, hum:d.rh, rain:d.precip||0, wind:(d.wind_spd*3.6).toFixed(1), cloud:d.clouds, uv:d.uv||0, loc:d.city_name||`${lat.toFixed(2)},${lon.toFixed(2)}`, desc:d.weather.description };
+  }catch(e){ return null; }
+}
+async function fetchOWMWeather(lat, lon){
+  try{
+    const url=`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OWM_API_KEY}&units=metric`;
+    const res=await fetch(url);
+    if(!res.ok) throw new Error('OWM failed');
+    const d=await res.json();
+    return { temp:d.main.temp, hum:d.main.humidity, rain:d.rain?.['1h']||d.rain?.['3h']||0, wind:(d.wind.speed*3.6).toFixed(1), cloud:d.clouds.all, uv:0, loc:d.name||`${lat.toFixed(2)},${lon.toFixed(2)}`, desc:d.weather[0]?.description };
+  }catch(e){ return null; }
+}
+function getDefaultWeather(lat, lon){ return { temp:28, hum:70, rain:0, wind:'10', cloud:30, uv:5, loc:`${lat.toFixed(2)},${lon.toFixed(2)}`, desc:'Estimated' }; }
+async function fetchWeather(lat, lon){
+  let w = await fetchWeatherbitWeather(lat, lon);
+  if(!w) w = await fetchOWMWeather(lat, lon);
+  if(!w) w = getDefaultWeather(lat, lon);
+  F.weather = w; displayWeather(w);
+}
+function displayWeather(w){
+  set('ldb-loc',`${w.loc} (${w.desc})`);
+  set('ld-temp',w.temp+'°C'); set('ld-hum',w.hum+'%'); set('ld-rain',w.rain+' mm');
+  set('ld-wind',w.wind+' km/h'); set('ld-cloud',w.cloud+'%'); set('ld-uv',w.uv);
+}
 
+// ── SOIL (Robust: API → State fallback) ────────
+async function fetchLiveSoil(lat, lon){
+  try{
+    const url=`https://rest.isric.org/soilgrids/v2.0/properties/query?lon=${lon}&lat=${lat}&property=phh2o&property=clay&property=sand&property=silt&property=ocd&depth=0-5cm&value=mean`;
+    const res=await fetch(url);
+    if(!res.ok) throw new Error('SoilGrids failed');
+    const json=await res.json();
+    const layers=json.properties.layers;
+    const getVal=n=>(layers.find(l=>l.name===n)?.depths[0]?.values?.mean)||0;
+    const ph = parseFloat(getVal('phh2o').toFixed(1));
+    const clay = Math.round(getVal('clay'));
+    const sand = Math.round(getVal('sand'));
+    const silt = Math.round(getVal('silt'));
+    const soc = Math.round(getVal('ocd') / 10);
+    if (ph > 14 || ph < 3 || clay > 100 || sand > 100 || silt > 100 || clay+sand+silt > 100 || soc > 100) {
+      throw new Error('Unrealistic values');
+    }
+    return { ph, clay, sand, silt, soc, wrb:'API', texture:'Live (SoilGrids)', detail:`SoilGrids data at ${lat.toFixed(4)},${lon.toFixed(4)}` };
+  }catch(e){ return null; }
+}
+function getLocalSoil(state){
+  const def = STATE_SOIL_FALLBACK[state] || {ph:6.2, clay:25, sand:40, silt:30, soc:12, wrb:'Alfisol', texture:'Sandy Loam', detail:'Estimated'};
+  return {
+    ph: (def.ph + (Math.random()*0.2-0.1)).toFixed(1),
+    clay: def.clay + Math.round(Math.random()*4-2),
+    sand: def.sand + Math.round(Math.random()*4-2),
+    silt: def.silt + Math.round(Math.random()*4-2),
+    soc: def.soc + Math.round(Math.random()*2-1),
+    wrb: def.wrb, texture: def.texture, detail: `${def.detail} (fallback)`
+  };
+}
+function displaySoil(soil){
+  document.getElementById('soil-result').innerHTML=`
+    <div class="soil-name">🌍 ${soil.wrb} — ${soil.texture}</div><div style="font-size:.73rem;color:#ccc">${soil.detail}</div>
+    <div class="soil-props"><span class="soil-prop">pH ${soil.ph}</span><span class="soil-prop">Clay ${soil.clay}%</span><span class="soil-prop">Sand ${soil.sand}%</span><span class="soil-prop">OC ${soil.soc} g/kg</span></div>`;
+  document.getElementById('soil-section-title').innerHTML=`🌍 Soil Data – ${F.state||'Selected location'}`;
+}
+
+// ── CLIMATE FROM OPEN‑METEO ─────────────────────
+async function fetchClimateFromOpenMeteo(lat, lon){
+  try{
+    const url=`https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=2000-01-01&end_date=2023-12-31&daily=temperature_2m_mean,precipitation_sum&timezone=Africa/Lagos`;
+    const res=await fetch(url);
+    if(!res.ok) throw new Error('Open-Meteo failed');
+    const data=await res.json();
+    const daily=data.daily;
+    const temps=daily.temperature_2m_mean;
+    const precips=daily.precipitation_sum;
+    const avgTemp=(temps.reduce((a,b)=>a+b,0)/temps.length).toFixed(1);
+    let totalRain=0;
+    const monthlyRain=Array(12).fill(0);
+    const monthlyDays=Array(12).fill(0);
+    daily.time.forEach((dateStr,i)=>{
+      const month=new Date(dateStr).getMonth();
+      monthlyRain[month]+=precips[i];
+      monthlyDays[month]++;
+      totalRain+=precips[i];
+    });
+    const years=24;
+    const annualRain=Math.round(totalRain/years);
+    let dryMonths=0, wetMonths=0;
+    for(let m=0;m<12;m++){
+      const avgMonthly=monthlyRain[m]/(monthlyDays[m]/30.5);
+      if(avgMonthly<60) dryMonths++; else wetMonths++;
+    }
+    return { annualRain:Math.round(annualRain), avgTemp:parseFloat(avgTemp), dryMonths, wetMonths, rainyStart:4 };
+  }catch(e){ return null; }
+}
+async function fetchClimate(lat, lon){
+  let climate = await fetchClimateFromOpenMeteo(lat, lon);
+  if(!climate){ climate = { annualRain:1200, avgTemp:28, dryMonths:4, wetMonths:5, rainyStart:4 }; }
+  F.climate = climate;
+  set('ld-annual-rain', climate.annualRain+' mm');
+  set('ld-avg-temp', climate.avgTemp+'°C');
+  set('ld-dry-months', climate.dryMonths);
+  set('ld-wet-months', climate.wetMonths);
+}
+
+// ══════════ CROP SELECTION & CATEGORY RENDERING ═══
+function scoreCrop(crop) {
+  const c = F.climate;
+  const s = F.soil;
+  if (!c || !s) return null;
+  const rain = c.annualRain, temp = c.avgTemp, ph = parseFloat(s.ph);
+  let score = 0;
+  if (rain >= crop.req.rainMin && rain <= crop.req.rainMax) score += 5;
+  else if (rain >= crop.req.rainMin*0.8 && rain < crop.req.rainMin) score += 2;
+  else if (rain < crop.req.rainMin*0.8) score -= 2;
+  if (rain > crop.req.rainMax*1.2) score -= 1;
+  if (temp >= crop.req.tempMin && temp <= crop.req.tempMax) score += 4;
+  else if (temp >= crop.req.tempMin*0.95 && temp < crop.req.tempMin) score += 2;
+  if (temp < crop.req.tempMin*0.9 || temp > crop.req.tempMax*1.1) score -= 1;
+  if (ph >= crop.req.phMin && ph <= crop.req.phMax) score += 3;
+  else if (ph >= crop.req.phMin-0.5 && ph <= crop.req.phMax+0.5) score += 1;
+  else if (ph < crop.req.phMin-1 || ph > crop.req.phMax+1) score -= 2;
+  if (F.water.includes('Irrigation') && rain < crop.req.rainMin) score += 2;
+  if (F.concern.includes('Drought') && crop.req.droughtTol >= 4) score += 2;
+  return score;
+}
+
+function getTopCropsByCategory(category, count=3) {
+  const cropsInCategory = CROPS_DB.filter(c => c.category === category);
+  if (cropsInCategory.length === 0) return [];
+  const scored = cropsInCategory.map(crop => {
+    const score = scoreCrop(crop);
+    if (score === null) return null;
+    return { ...crop, score: Math.max(0, score + Math.random()*2 -1), variety: crop.varieties[0] };
+  }).filter(c => c !== null && c.score >= 3); // minimum suitability threshold
+  return scored.sort((a,b) => b.score - a.score).slice(0, count);
+}
+
+function renderCategoryCards(containerId, crops) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+  const emptyEl = document.getElementById(containerId.replace('-grid', '-empty'));
+  if (!crops || crops.length === 0) {
+    if (emptyEl) emptyEl.style.display = 'block';
+    return;
+  }
+  if (emptyEl) emptyEl.style.display = 'none';
+  crops.forEach((c, i) => {
+    const card = document.createElement('div');
+    card.className = `crop-card rank-${i+1}`;
+    card.innerHTML = `
+      <div class="cc-top">
+        <span class="cc-badge">#${i+1}</span>
+        <span class="cc-icon">${c.icon}</span>
+        <div class="cc-name">${c.name}</div>
+        <div class="cc-variety">${c.category} · ${c.variety.n}</div>
+      </div>
+      <div class="cc-body">
+        <div class="cc-row"><span class="ck">Yield/ha</span><span class="cv">${c.variety.y} ${c.unit}</span></div>
+        <div class="cc-row"><span class="ck">Fertilizer</span><span class="cv">${c.variety.fert}</span></div>
+        <div class="plant-window">
+          <div class="pw-label">🗓 Planting window</div>
+          <div class="pw-months" id="plant-months-${containerId}-${i}"></div>
+        </div>
+      </div>`;
+    container.appendChild(card);
+  });
+  crops.forEach((c, i) => fillPlantingMonths(c, i, `${containerId}-${i}`));
+}
+
+function fillPlantingMonths(crop, index, containerId) {
+  const climate = F.climate;
+  if (!climate) return;
+  const rainyStart = climate.rainyStart || 4;
+  const duration = crop.req.months || 4;
+  const startMonth = rainyStart - 1;
+  const container = document.getElementById(`plant-months-${containerId}`);
+  if (!container) return;
+  let html = '';
+  for (let m = 0; m < 12; m++) {
+    const isPlanting = (m >= startMonth && m < startMonth + duration) || (startMonth + duration > 12 && (m >= startMonth || m < (startMonth + duration) % 12));
+    html += `<span class="month-tag ${isPlanting ? 'now' : ''}">${MONTHS[m].slice(0,1)}</span>`;
+  }
+  container.innerHTML = html;
+}
+
+// ── RENDERING ────────────────────────────────────
+function renderSummary(){
+  let w=F.weather, s=F.soil, c=F.climate;
+  let html=`<div class="alert a-green">📍 ${F.state} - ${F.lga} | ${F.farmHa} ha | ${F.water}</div>`;
+  if(w) html+=`<div class="alert a-sky">🌡️ ${w.temp}°C · 💧 ${w.hum}% · ☔ ${w.rain}mm today</div>`;
+  if(s) html+=`<div class="alert a-green">🌱 pH ${s.ph} · ${s.texture} · OC ${s.soc} g/kg</div>`;
+  if(c) html+=`<div class="alert a-sky">📊 Annual rain ${c.annualRain}mm · ${c.avgTemp}°C mean · ${c.dryMonths} dry months</div>`;
+  document.getElementById('data-summary').innerHTML=html;
+}
+function generateAI(topStaple){
+  document.getElementById('ai-out').innerHTML=`
+    <div class="ai-sections">
+      <div class="ai-sec"><div class="ai-sec-title">🌱 TOP STAPLE PICK</div><div class="ai-sec-body">Based on live soil and climate, <strong>${topStaple ? topStaple.name : 'Cassava'}</strong> is your best staple choice. Plant at the onset of rains.</div></div>
+      <div class="ai-sec"><div class="ai-sec-title">⚠️ RISK</div><div class="ai-sec-body">${F.concern.includes('Drought')?'Choose drought‑tolerant varieties and mulch heavily.':'Ensure good drainage and pest control.'}</div></div>
+    </div>`;
+}
+
+// ── MAIN FLOW ───────────────────────────────────
+async function loadAllData(lat, lon){
+  document.getElementById('live-block').classList.add('show');
+  let soil=await fetchLiveSoil(lat, lon);
+  if(!soil) soil=getLocalSoil(F.state);
+  F.soil=soil; displaySoil(soil);
+  await Promise.all([fetchWeather(lat, lon), fetchClimate(lat, lon)]);
+}
+function runAdvisor(){ F.farmHa=parseFloat(document.getElementById('farm-ha').value)||2; goStep(4); }
+async function runResults(){
+  document.getElementById('page-loader').classList.add('on');
+  document.getElementById('results-wrap').style.display='none';
+  loaderStep(1,'doing'); if(!F.weather) await fetchWeather(F.lat,F.lon); loaderStep(1,'done');
+  loaderStep(2,'doing'); if(!F.soil){ let s=await fetchLiveSoil(F.lat,F.lon)||getLocalSoil(F.state); F.soil=s; displaySoil(s); } loaderStep(2,'done');
+  loaderStep(3,'doing'); if(!F.climate) await fetchClimate(F.lat,F.lon); loaderStep(3,'done');
+  loaderStep(4,'doing');
+  const staples = getTopCropsByCategory('Staple');
+  const cashCrops = getTopCropsByCategory('Cash Crop');
+  const vegetables = getTopCropsByCategory('Vegetable');
+  const fruits = getTopCropsByCategory('Fruit');
+  const treeCrops = getTopCropsByCategory('Tree Crop');
+  renderCategoryCards('staples-grid', staples);
+  renderCategoryCards('cash-crops-grid', cashCrops);
+  renderCategoryCards('vegetables-grid', vegetables);
+  renderCategoryCards('fruits-grid', fruits);
+  renderCategoryCards('tree-grid', treeCrops);
+  loaderStep(4,'done');
+  document.getElementById('page-loader').classList.remove('on');
+  document.getElementById('results-wrap').style.display='block';
+  renderSummary();
+  generateAI(staples[0] || cashCrops[0] || vegetables[0] || fruits[0] || treeCrops[0]);
+  // Simple calendar for the top staple
+  const topCrop = staples[0] || cashCrops[0] || vegetables[0] || fruits[0] || treeCrops[0];
+  if (topCrop) renderCalendar([topCrop]);
+  else document.getElementById('cal-wrap').innerHTML = '';
+  loaderStep(5,'done');
+}
+
+function renderCalendar(crops) {
+  if (!crops.length) return;
+  const climate = F.climate;
+  if (!climate) return;
+  const rainyStart = climate.rainyStart || 4;
+  let table = '<table class="cal-table"><thead><tr><th>Crop</th>';
+  MONTHS.forEach(m => table += `<th>${m}</th>`);
+  table += '</tr></thead><tbody>';
+  crops.forEach(crop => {
+    table += `<tr><td>${crop.icon} ${crop.name}</td>`;
+    const duration = crop.req.months || 4;
+    const startMonth = rainyStart - 1;
+    for (let m = 0; m < 12; m++) {
+      const isPlanting = (m >= startMonth && m < startMonth + duration) || (startMonth + duration > 12 && (m >= startMonth || m < (startMonth + duration) % 12));
+      table += `<td class="${isPlanting ? 'plant' : ''}">${isPlanting ? '🌱' : ''}</td>`;
+    }
+    table += '</tr>';
+  });
+  table += '</tbody></table>';
+  document.getElementById('cal-wrap').innerHTML = `<div class="cal-wrap">${table}</div><p style="text-align:center;color:var(--muted);margin-top:0.5rem;">🌱 = recommended planting window based on local rainy season</p>`;
+}
+function loaderStep(n,state){
+  let el=document.getElementById('ls'+n);
+  if(el){ el.classList.remove('active','done'); if(state==='doing') el.classList.add('active'); else if(state==='done') el.classList.add('done'); }
+}
+
+// INIT
+window.addEventListener('DOMContentLoaded', ()=>{
+  let sel=document.getElementById('sel-state');
+  Object.keys(ALL_LGAS).sort().forEach(s=> sel.add(new Option(s,s)));
+  doGPS();
+});
+</script>
 </body>
 </html>
